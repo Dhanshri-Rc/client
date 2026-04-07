@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import { getMe } from './store/slices/authSlice';
 import { useSocket } from './hooks/useSocket';
+import 'leaflet/dist/leaflet.css';
 
 // Pages
 import HomePage from './pages/HomePage';

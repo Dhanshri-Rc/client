@@ -286,7 +286,8 @@ import { getSocket } from '../services/socket';
 import { StatusBadge, PageLoader, Spinner } from '../components/common/UI';
 import { formatCurrency, formatDate, getVehicleIcon, getVehicleName } from '../utils/helpers';
 import toast from 'react-hot-toast';
-import MapComponent from '../components/MapComponent';
+// import MapComponent from '../components/MapComponent';
+import MapComponent from './MapComponent';
 
 const STATUS_STEPS = ['pending', 'accepted', 'picked', 'delivered'];
 

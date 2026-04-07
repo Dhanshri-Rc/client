@@ -19,7 +19,7 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     name: '', email: '', phone: '', password: '',
     role: searchParams.get('role') === 'driver' ? 'driver' : 'customer',
-    licenseNumber: '', vehicleType: 'bike', vehicleNumber: '', RCNumber: '', vehicleModel: '',
+    licenseNumber: '', vehicleType: 'bike', vehicleNumber: '',  vehicleModel: '',
   });
 
   useEffect(() => { dispatch(clearError()); }, []);
@@ -136,11 +136,6 @@ export default function RegisterPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('vehicleNumber')}</label>
                   <input type="text" placeholder="MH12AB1234" className="input-field" value={form.vehicleNumber} onChange={update('vehicleNumber')} />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('RCNumber')}</label>
-                  <input type="text" placeholder="RC-XXXXXXXXXX" className="input-field" value={form.RCNumber} onChange={update('RCNumber')} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('vehicleModel')}</label>

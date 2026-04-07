@@ -12,15 +12,17 @@
     "@reduxjs/toolkit": "^2.0.1",
     "axios": "^1.6.2",
     "i18next": "^23.7.6",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.303.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
     "react-i18next": "^14.0.0",
+    "react-leaflet": "^4.2.1",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.1",
-    "react-hot-toast": "^2.4.1",
-    "socket.io-client": "^4.6.2",
     "recharts": "^2.10.3",
-    "lucide-react": "^0.303.0"
+    "socket.io-client": "^4.6.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

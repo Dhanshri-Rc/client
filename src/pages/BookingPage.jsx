@@ -399,152 +399,215 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { MapPin, Navigation, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { MapPin, Navigation, Clock, CheckCircle } from 'lucide-react';
 import { getFareEstimate, createOrder, clearEstimate } from '../store/slices/orderSlice';
-import { calculateDistance, formatCurrency } from '../utils/helpers';
+import { Spinner, StepIndicator, ErrorAlert } from '../components/common/UI';
+import { calculateDistance, formatCurrency, getVehicleIcon } from '../utils/helpers';
 import toast from 'react-hot-toast';
 
 const VEHICLES = [
-  { type: 'bike', icon: '🏍️', name: 'Bike', desc: 'Quick · Small items' },
-  { type: 'mini_truck', icon: '🚐', name: 'Mini Truck', desc: 'Medium loads' },
-  { type: 'large_truck', icon: '🚛', name: 'Large Truck', desc: 'Heavy goods' },
+  { type: 'bike', icon: '🏍️', name: 'Bike', desc: 'Up to 20 kg', basePrice: 30, pricePerKm: 8 },
+  { type: 'mini_truck', icon: '🚐', name: 'Mini Truck', desc: 'Up to 500 kg', basePrice: 80, pricePerKm: 15 },
+  { type: 'large_truck', icon: '🚛', name: 'Large Truck', desc: 'Up to 2000 kg', basePrice: 150, pricePerKm: 25 },
 ];
 
-function Input({ icon: Icon, value, onChange, placeholder }) {
+function PlaceInput({ label, placeholder, value, onChange, icon: Icon }) {
   return (
-    <div className="flex items-center gap-3 bg-gray-900 border border-gray-800 rounded-lg px-3 py-3">
-      <Icon className="w-4 h-4 text-gray-400" />
-      <input
-        value={value?.address || ''}
-        onChange={(e) =>
-          onChange({
-            address: e.target.value,
-            lat: 18.52,
-            lng: 73.85,
-          })
-        }
-        placeholder={placeholder}
-        className="bg-transparent w-full text-white placeholder-gray-500 outline-none text-sm"
-      />
+    <div>
+      <label className="block text-sm font-medium text-gray-800 mb-1.5">{label}</label>
+      <div className="relative">
+        <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+        <input
+          type="text"
+          placeholder={placeholder}
+          value={value?.address || ''}
+          onChange={(e) =>
+            onChange({
+              address: e.target.value,
+              lat: 18.5204 + Math.random() * 0.1,
+              lng: 73.8567 + Math.random() * 0.1,
+            })
+          }
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+        />
+      </div>
     </div>
   );
 }
 
 export default function BookingPage() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { estimate, loading } = useSelector((s) => s.orders);
+  const { estimate, loading, error } = useSelector((s) => s.orders);
 
   const [step, setStep] = useState(0);
   const [pickup, setPickup] = useState(null);
   const [dropoff, setDropoff] = useState(null);
   const [vehicleType, setVehicleType] = useState('bike');
+  const [paymentMethod, setPaymentMethod] = useState('online');
+  const [packageDetails, setPackageDetails] = useState({ description: '', weight: '', fragile: false });
+  const [notes, setNotes] = useState('');
 
   useEffect(() => {
     dispatch(clearEstimate());
+    return () => dispatch(clearEstimate());
   }, []);
 
   const handleEstimate = async () => {
-    if (!pickup || !dropoff) return toast.error("Enter locations");
+    if (!pickup || !dropoff) return toast.error('Please select pickup and drop locations');
+
+    const distance = calculateDistance(pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
+    if (distance <= 0) return toast.error('Pickup and drop cannot be same');
+
     await dispatch(getFareEstimate({ pickup, dropoff, vehicleType }));
     setStep(2);
   };
 
   const handlePlaceOrder = async () => {
-    const res = await dispatch(createOrder({
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("Please login first");
+      navigate("/login");
+      return;
+    }
+
+    if (!pickup || !dropoff || !estimate) {
+      toast.error("Missing order details");
+      return;
+    }
+
+    const distance = calculateDistance(pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
+
+    const result = await dispatch(createOrder({
       vehicleType,
       pickup,
       dropoff,
-      distance: calculateDistance(pickup.lat, pickup.lng, dropoff.lat, dropoff.lng),
+      distance,
+      packageDetails: {
+        ...packageDetails,
+        weight: Number(packageDetails.weight) || 0,
+      },
+      paymentMethod,
+      notes,
     }));
 
-    if (createOrder.fulfilled.match(res)) {
-      navigate(`/track/${res.payload._id}`);
+    if (createOrder.rejected.match(result)) {
+      toast.error(result.payload || "Order failed");
+      return;
+    }
+
+    if (createOrder.fulfilled.match(result)) {
+      const order = result.payload;
+      toast.success("Order placed successfully!");
+      navigate(`/track/${order._id}`);
     }
   };
 
+  const steps = ['Location', 'Vehicle', 'Confirm'];
+
   return (
-    <div className="h-screen bg-black text-white flex flex-col">
+    <div className="max-w-2xl mx-auto animate-fade-in text-gray-900">
 
-      {/* Fake Map Area */}
-      <div className="flex-1 bg-gray-950 flex items-center justify-center text-gray-600 text-sm">
-        Map Area (Integrate Google Maps later)
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-black">{t('bookDelivery')}</h1>
+        <p className="text-gray-600 mt-1">Fill in delivery details below</p>
       </div>
 
-      {/* Bottom Sheet */}
-      <div className="bg-black border-t border-gray-800 rounded-t-3xl p-4 space-y-4">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm mb-6 p-4">
+        <StepIndicator steps={steps} currentStep={step} />
+      </div>
 
-        {/* Step 1: Locations */}
-        {step === 0 && (
-          <>
-            <Input icon={Navigation} value={pickup} onChange={setPickup} placeholder="Pickup location" />
-            <Input icon={MapPin} value={dropoff} onChange={setDropoff} placeholder="Drop location" />
+      {error && <ErrorAlert message={error} />}
 
-            <button
-              onClick={() => setStep(1)}
-              className="w-full bg-white text-black py-3 rounded-xl font-medium"
-            >
-              Continue
-            </button>
-          </>
-        )}
+      {/* STEP 0 */}
+      {step === 0 && (
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-4 space-y-4">
 
-        {/* Step 2: Vehicles */}
-        {step === 1 && (
-          <>
-            <p className="text-sm text-gray-400">Choose a vehicle</p>
+          <PlaceInput label={t('pickupLocation')} placeholder="Enter pickup address" value={pickup} onChange={setPickup} icon={Navigation} />
 
-            <div className="space-y-2">
-              {VEHICLES.map(v => (
-                <div
-                  key={v.type}
-                  onClick={() => setVehicleType(v.type)}
-                  className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition ${
-                    vehicleType === v.type
-                      ? 'border-white bg-gray-900'
-                      : 'border-gray-800'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">{v.icon}</span>
-                    <div>
-                      <p className="text-sm">{v.name}</p>
-                      <p className="text-xs text-gray-500">{v.desc}</p>
-                    </div>
-                  </div>
-                  {vehicleType === v.type && <CheckCircle className="w-4 h-4" />}
+          <PlaceInput label={t('dropLocation')} placeholder="Enter drop address" value={dropoff} onChange={setDropoff} icon={MapPin} />
+
+          <input
+            type="text"
+            placeholder="What are you shipping?"
+            className="w-full border border-gray-300 rounded-xl px-4 py-3"
+            value={packageDetails.description}
+            onChange={e => setPackageDetails({ ...packageDetails, description: e.target.value })}
+          />
+
+          <button
+            onClick={() => setStep(1)}
+            className="w-full py-3 bg-black text-white rounded-xl font-medium hover:bg-gray-900 transition"
+          >
+            Next: Select Vehicle
+          </button>
+        </div>
+      )}
+
+      {/* STEP 1 */}
+      {step === 1 && (
+        <div className="space-y-4">
+
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-4">
+            {VEHICLES.map(v => (
+              <button
+                key={v.type}
+                onClick={() => setVehicleType(v.type)}
+                className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition ${
+                  vehicleType === v.type
+                    ? 'border-black bg-gray-100'
+                    : 'border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <span className="text-3xl">{v.icon}</span>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold text-black">{v.name}</p>
+                  <p className="text-sm text-gray-500">{v.desc}</p>
                 </div>
-              ))}
-            </div>
+                {vehicleType === v.type && <CheckCircle className="text-black" />}
+              </button>
+            ))}
+          </div>
 
-            <button
-              onClick={handleEstimate}
-              className="w-full bg-white text-black py-3 rounded-xl font-medium"
-            >
-              Get Fare
+          <div className="flex gap-3">
+            <button onClick={() => setStep(0)} className="flex-1 py-3 bg-gray-100 rounded-xl">Back</button>
+            <button onClick={handleEstimate} className="flex-1 py-3 bg-black text-white rounded-xl">
+              {loading ? <Spinner size="sm" color="white" /> : 'Get Estimate'}
             </button>
-          </>
-        )}
+          </div>
+        </div>
+      )}
 
-        {/* Step 3: Fare */}
-        {step === 2 && estimate && (
-          <>
-            <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
-              <p className="text-xs text-gray-400">Estimated Fare</p>
-              <p className="text-3xl font-bold">
-                {formatCurrency(estimate.fare.total)}
-              </p>
+      {/* STEP 2 */}
+      {step === 2 && estimate && (
+        <div className="space-y-4">
+
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-4">
+            <h3 className="font-semibold text-black">Summary</h3>
+            <p className="text-gray-600 text-sm">{pickup?.address}</p>
+            <p className="text-gray-600 text-sm">{dropoff?.address}</p>
+          </div>
+
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-4">
+            <h3 className="font-semibold text-black">{t('estimatedFare')}</h3>
+            <div className="flex justify-between font-bold text-black mt-2">
+              <span>Total</span>
+              <span>{formatCurrency(estimate.fare.total)}</span>
             </div>
+          </div>
 
-            <button
-              onClick={handlePlaceOrder}
-              className="w-full bg-white text-black py-3 rounded-xl font-medium"
-            >
-              Confirm Ride
+          <div className="flex gap-3">
+            <button onClick={() => setStep(1)} className="flex-1 py-3 bg-gray-100 rounded-xl">Back</button>
+            <button onClick={handlePlaceOrder} className="flex-1 py-3 bg-black text-white rounded-xl">
+              {loading ? <Spinner size="sm" color="white" /> : t('placeOrder')}
             </button>
-          </>
-        )}
-      </div>
+          </div>
+
+        </div>
+      )}
     </div>
   );
 }

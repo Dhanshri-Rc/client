@@ -14,7 +14,45 @@ const VEHICLES = [
   { type: 'large_truck', icon: '🚛', name: 'Large Truck', desc: 'Up to 2000 kg', basePrice: 150, pricePerKm: 25 },
 ];
 
+// Google Maps Autocomplete input
+// function PlaceInput({ label, placeholder, value, onChange, icon: Icon }) {
+//   const inputRef = useRef(null);
+//   const autocompleteRef = useRef(null);
 
+//   useEffect(() => {
+//     if (!window.google || !inputRef.current) return;
+//     autocompleteRef.current = new window.google.maps.places.Autocomplete(inputRef.current, {
+//       componentRestrictions: { country: 'in' },
+//       fields: ['geometry', 'formatted_address'],
+//     });
+//     autocompleteRef.current.addListener('place_changed', () => {
+//       const place = autocompleteRef.current.getPlace();
+//       if (place.geometry) {
+//         onChange({
+//           address: place.formatted_address,
+//           lat: place.geometry.location.lat(),
+//           lng: place.geometry.location.lng(),
+//         });
+//       }
+//     });
+//   }, []);
+
+//   return (
+//     <div>
+//       <label className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
+//       <div className="relative">
+//         <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+//         <input
+//           ref={inputRef}
+//           type="text"
+//           placeholder={placeholder}
+//           defaultValue={value?.address || ''}
+//           className="input-field pl-10"
+//         />
+//       </div>
+//     </div>
+//   );
+// }
 
 function PlaceInput({ label, placeholder, value, onChange, icon: Icon }) {
   return (
@@ -59,9 +97,26 @@ export default function BookingPage() {
     return () => dispatch(clearEstimate());
   }, []);
 
+  // const handleEstimate = async () => {
+  //   if (!pickup || !dropoff) return toast.error('Please select pickup and drop locations');
+  //   const distance = calculateDistance(pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
+  //   await dispatch(getFareEstimate({ pickup, dropoff, vehicleType }));
+  //   setStep(2);
+  // };
 
-
-
+  // const handlePlaceOrder = async () => {
+  //   if (!pickup || !dropoff || !estimate) return;
+  //   const distance = calculateDistance(pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
+  //   const result = await dispatch(createOrder({
+  //     vehicleType, pickup, dropoff, distance,
+  //     packageDetails: { ...packageDetails, weight: Number(packageDetails.weight) || 0 },
+  //     paymentMethod, notes,
+  //   }));
+  //   if (createOrder.fulfilled.match(result)) {
+  //     toast.success('Order placed successfully!');
+  //     navigate(`/track/${result.payload._id}`);
+  //   }
+  // };
 const handleEstimate = async () => {
   if (!pickup || !dropoff) {
     return toast.error('Please select pickup and drop locations');
@@ -155,8 +210,8 @@ const handlePlaceOrder = async () => {
           />
           <div className="flex items-center gap-3 py-1">
             <div className="flex-1 h-px bg-gray-200" />
-            <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-gray-400" />
+            <div className="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-primary-400" />
             </div>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
@@ -190,7 +245,7 @@ const handlePlaceOrder = async () => {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 rounded text-gray-500"
+                  className="w-4 h-4 rounded text-primary-500"
                   checked={packageDetails.fragile}
                   onChange={e => setPackageDetails({ ...packageDetails, fragile: e.target.checked })}
                 />
@@ -200,7 +255,7 @@ const handlePlaceOrder = async () => {
           </div>
           <button
             onClick={() => { if (!pickup) return toast.error('Select pickup'); if (!dropoff) return toast.error('Select dropoff'); setStep(1); }}
-            className="btn-gray w-full py-3"
+            className="btn-primary w-full py-3"
           >
             Next: Select Vehicle
           </button>
@@ -218,19 +273,19 @@ const handlePlaceOrder = async () => {
                   key={v.type}
                   onClick={() => setVehicleType(v.type)}
                   className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${
-                    vehicleType === v.type ? 'border-gray-500 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                    vehicleType === v.type ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   <span className="text-3xl">{v.icon}</span>
                   <div className="flex-1 text-left">
-                    <p className={`font-semibold ${vehicleType === v.type ? 'text-gray-700' : 'text-gray-900'}`}>{v.name}</p>
+                    <p className={`font-semibold ${vehicleType === v.type ? 'text-primary-700' : 'text-gray-900'}`}>{v.name}</p>
                     <p className="text-sm text-gray-500">{v.desc}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-gray-700">₹{v.basePrice} base</p>
                     <p className="text-xs text-gray-400">+₹{v.pricePerKm}/km</p>
                   </div>
-                  {vehicleType === v.type && <CheckCircle className="w-5 h-5 text-gray-500 flex-shrink-0" />}
+                  {vehicleType === v.type && <CheckCircle className="w-5 h-5 text-primary-500 flex-shrink-0" />}
                 </button>
               ))}
             </div>
@@ -241,8 +296,8 @@ const handlePlaceOrder = async () => {
             <div className="grid grid-cols-2 gap-3">
               {[{ value: 'online', label: '💳 Online', sub: 'Razorpay' }, { value: 'cash', label: '💵 Cash', sub: 'Pay on delivery' }].map(p => (
                 <button key={p.value} onClick={() => setPaymentMethod(p.value)}
-                  className={`p-3 rounded-xl border-2 text-left transition-all ${paymentMethod === p.value ? 'border-gray-500 bg-gray-50' : 'border-gray-200'}`}>
-                  <p className={`font-medium text-sm ${paymentMethod === p.value ? 'text-gray-700' : 'text-gray-700'}`}>{p.label}</p>
+                  className={`p-3 rounded-xl border-2 text-left transition-all ${paymentMethod === p.value ? 'border-primary-500 bg-primary-50' : 'border-gray-200'}`}>
+                  <p className={`font-medium text-sm ${paymentMethod === p.value ? 'text-primary-700' : 'text-gray-700'}`}>{p.label}</p>
                   <p className="text-xs text-gray-400">{p.sub}</p>
                 </button>
               ))}
@@ -261,7 +316,7 @@ const handlePlaceOrder = async () => {
 
           <div className="flex gap-3">
             <button onClick={() => setStep(0)} className="btn-secondary flex-1 py-3">{t('back')}</button>
-            <button onClick={handleEstimate} disabled={loading} className="btn-gray flex-1 py-3">
+            <button onClick={handleEstimate} disabled={loading} className="btn-primary flex-1 py-3">
               {loading ? <Spinner size="sm" color="white" /> : 'Get Estimate'}
             </button>
           </div>
@@ -276,7 +331,7 @@ const handlePlaceOrder = async () => {
             <h3 className="font-semibold text-gray-900">Delivery Summary</h3>
             <div className="space-y-2 text-sm">
               <div className="flex gap-3 items-start">
-                <Navigation className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                <Navigation className="w-4 h-4 text-primary-500 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-xs text-gray-400 font-medium">PICKUP</p>
                   <p className="text-gray-700">{pickup?.address}</p>
@@ -319,7 +374,7 @@ const handlePlaceOrder = async () => {
               </div>
               <div className="flex justify-between font-bold text-gray-900 pt-2 border-t border-gray-100 text-base">
                 <span>{t('totalFare')}</span>
-                <span className="text-gray-600">{formatCurrency(estimate.fare.total)}</span>
+                <span className="text-primary-600">{formatCurrency(estimate.fare.total)}</span>
               </div>
             </div>
             <div className="mt-3 bg-blue-50 rounded-xl p-3 text-xs text-blue-700">
@@ -329,7 +384,7 @@ const handlePlaceOrder = async () => {
 
           <div className="flex gap-3">
             <button onClick={() => setStep(1)} className="btn-secondary flex-1 py-3">{t('back')}</button>
-            <button onClick={handlePlaceOrder} disabled={loading} className="btn-gray flex-1 py-3">
+            <button onClick={handlePlaceOrder} disabled={loading} className="btn-primary flex-1 py-3">
               {loading ? <Spinner size="sm" color="white" /> : t('placeOrder')}
             </button>
           </div>

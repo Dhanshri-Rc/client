@@ -32,7 +32,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+   <div className="min-h-screen flex flex-col lg:flex-row bg-white">
       {/* Left Panel — decorative */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
@@ -58,14 +58,14 @@ export default function LoginPage() {
       </div>
 
       {/* Right Panel — form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-16">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 md:px-10 lg:px-16 py-10">
         <div
-          className={`w-full max-w-sm mx-auto transition-all duration-500 ${
+          className={`w-full max-w-md mx-auto transition-all duration-500 ${
             mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
           {/* Mobile logo */}
-          <div className="lg:hidden mb-8">
+          <div className="lg:hidden mb-6 flex justify-center">
             <Link to="/" className="inline-flex items-center gap-2">
               <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
                 <Truck className="w-4 h-4 text-white" />
@@ -75,7 +75,7 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2">
               {t('loginTitle')}
             </h1>
             <p className="text-gray-500 text-sm">{t('loginSubtitle')}</p>
@@ -92,7 +92,7 @@ export default function LoginPage() {
                 type="email"
                 required
                 placeholder="you@example.com"
-                className="input-field"
+                className="input-field w-full"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
@@ -109,7 +109,7 @@ export default function LoginPage() {
                   type={showPw ? 'text' : 'password'}
                   required
                   placeholder="••••••••"
-                  className="input-field pr-12"
+                 className="input-field w-full pr-12"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
@@ -126,7 +126,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-3.5 text-sm mt-2"
+              className="btn-primary w-full py-3 text-sm mt-2"
             >
               {loading ? <Spinner size="sm" color="white" /> : t('login')}
             </button>
@@ -139,19 +139,11 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          {/* Demo credentials */}
-          <div className="mt-8 p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <p className="text-xs font-semibold text-gray-700 mb-2">Demo accounts</p>
-            <div className="space-y-1 text-xs text-gray-500">
-              <p>Customer: <span className="font-mono text-gray-700">customer@demo.com</span> / <span className="font-mono text-gray-700">password123</span></p>
-              <p>Driver: <span className="font-mono text-gray-700">driver@demo.com</span> / <span className="font-mono text-gray-700">password123</span></p>
-              <p>Admin: <span className="font-mono text-gray-700">admin@demo.com</span> / <span className="font-mono text-gray-700">password123</span></p>
-            </div>
-          </div>
+        
 
           <Link
             to="/"
-            className="mt-6 flex items-center gap-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            className="mt-6 flex justify-center lg:justify-start items-center gap-2 text-xs text-gray-400  hover:text-gray-600 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to home
           </Link>

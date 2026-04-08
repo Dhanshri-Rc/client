@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Truck, Eye, EyeOff } from 'lucide-react';
+import { Truck, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { loginUser, clearError } from '../store/slices/authSlice';
 import { Spinner, ErrorAlert } from '../components/common/UI';
 import toast from 'react-hot-toast';
@@ -14,8 +14,12 @@ export default function LoginPage() {
   const { loading, error } = useSelector((s) => s.auth);
   const [showPw, setShowPw] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
+  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { dispatch(clearError()); }, []);
+  useEffect(() => {
+    dispatch(clearError());
+    setTimeout(() => setMounted(true), 50);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,27 +32,66 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-orange-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
-              <Truck className="w-6 h-6 text-white" />
+    <div className="min-h-screen bg-white flex">
+      {/* Left Panel — decorative */}
+      <div
+        className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1200&q=80')`,
+        }}
+      >
+        <div className="absolute inset-0 bg-black/65" />
+        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white/10 border border-white/20 rounded-lg flex items-center justify-center">
+              <Truck className="w-4 h-4 text-white" />
             </div>
-            <span className="text-2xl font-bold">Swift<span className="text-primary-500">Move</span></span>
+            <span className="text-white font-bold tracking-tight">SwiftMove</span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">{t('loginTitle')}</h1>
-          <p className="text-gray-500 mt-1">{t('loginSubtitle')}</p>
+          <div>
+            <h2 className="text-4xl font-bold text-white mb-4 leading-tight tracking-tight">
+              Fast, reliable<br />deliveries at your<br />fingertips.
+            </h2>
+            <p className="text-white/60 text-sm">Trusted by 50,000+ customers across India.</p>
+          </div>
         </div>
+      </div>
 
-        <div className="card shadow-xl border-0">
+      {/* Right Panel — form */}
+      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-16">
+        <div
+          className={`w-full max-w-sm mx-auto transition-all duration-500 ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-8">
+            <Link to="/" className="inline-flex items-center gap-2">
+              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                <Truck className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-bold text-gray-900">SwiftMove</span>
+            </Link>
+          </div>
+
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">
+              {t('loginTitle')}
+            </h1>
+            <p className="text-gray-500 text-sm">{t('loginSubtitle')}</p>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && <ErrorAlert message={error} onDismiss={() => dispatch(clearError())} />}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('email')}</label>
+              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
+                {t('email')}
+              </label>
               <input
-                type="email" required placeholder="you@example.com"
+                type="email"
+                required
+                placeholder="you@example.com"
                 className="input-field"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -56,40 +99,62 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">{t('password')}</label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                  {t('password')}
+                </label>
+              </div>
               <div className="relative">
                 <input
-                  type={showPw ? 'text' : 'password'} required placeholder="••••••••"
+                  type={showPw ? 'text' : 'password'}
+                  required
+                  placeholder="••••••••"
                   className="input-field pr-12"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
-                <button type="button" onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <button
+                  type="button"
+                  onClick={() => setShowPw(!showPw)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary w-full py-3 text-base mt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full py-3.5 text-sm mt-2"
+            >
               {loading ? <Spinner size="sm" color="white" /> : t('login')}
             </button>
           </form>
 
-          <div className="mt-5 text-center">
-            <p className="text-sm text-gray-500">
-              {t('noAccount')}{' '}
-              <Link to="/register" className="text-primary-600 font-semibold hover:text-primary-700">{t('register')}</Link>
-            </p>
-          </div>
+          <p className="mt-6 text-center text-sm text-gray-500">
+            {t('noAccount')}{' '}
+            <Link to="/register" className="text-gray-900 font-semibold hover:underline">
+              {t('register')}
+            </Link>
+          </p>
 
           {/* Demo credentials */}
-          <div className="mt-4 p-3 bg-gray-50 rounded-xl text-xs text-gray-500 space-y-1">
-            <p className="font-medium text-gray-700">Demo accounts:</p>
-            <p>Customer: customer@demo.com / password123</p>
-            <p>Driver: driver@demo.com / password123</p>
-            <p>Admin: admin@demo.com / password123</p>
+          <div className="mt-8 p-4 bg-gray-50 rounded-xl border border-gray-100">
+            <p className="text-xs font-semibold text-gray-700 mb-2">Demo accounts</p>
+            <div className="space-y-1 text-xs text-gray-500">
+              <p>Customer: <span className="font-mono text-gray-700">customer@demo.com</span> / <span className="font-mono text-gray-700">password123</span></p>
+              <p>Driver: <span className="font-mono text-gray-700">driver@demo.com</span> / <span className="font-mono text-gray-700">password123</span></p>
+              <p>Admin: <span className="font-mono text-gray-700">admin@demo.com</span> / <span className="font-mono text-gray-700">password123</span></p>
+            </div>
           </div>
+
+          <Link
+            to="/"
+            className="mt-6 flex items-center gap-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to home
+          </Link>
         </div>
       </div>
     </div>

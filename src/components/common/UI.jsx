@@ -127,14 +127,14 @@ export function StepIndicator({ steps, currentStep }) {
     <div className="flex items-center gap-0">
       {steps.map((step, idx) => (
         <React.Fragment key={idx}>
-          <div className={`flex items-center gap-2 ${idx <= currentStep ? 'text-black/10' : 'text-gray-400'}`}>
-            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${idx < currentStep ? 'bg-black/10 border-black/20 text-white' : idx === currentStep ? 'border-black/10 text-black/10 bg-black/10' : 'border-gray-200 text-gray-400 bg-white'}`}>
+          <div className={`flex items-center gap-2 ${idx <= currentStep ? 'text-primary-600' : 'text-gray-400'}`}>
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${idx < currentStep ? 'bg-primary-500 border-primary-500 text-white' : idx === currentStep ? 'border-primary-500 text-primary-600 bg-primary-50' : 'border-gray-200 text-gray-400 bg-white'}`}>
               {idx < currentStep ? '✓' : idx + 1}
             </div>
             <span className="text-xs font-medium hidden sm:block">{step}</span>
           </div>
           {idx < steps.length - 1 && (
-            <div className={`flex-1 h-0.5 mx-2 ${idx < currentStep ? 'bg-black/20' : 'bg-gray-200'}`} />
+            <div className={`flex-1 h-0.5 mx-2 ${idx < currentStep ? 'bg-primary-400' : 'bg-gray-200'}`} />
           )}
         </React.Fragment>
       ))}

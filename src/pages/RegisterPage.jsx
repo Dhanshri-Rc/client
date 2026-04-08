@@ -20,8 +20,7 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     name: '', email: '', phone: '', password: '',
     role: searchParams.get('role') === 'driver' ? 'driver' : 'customer',
-    licenseNumber: '', vehicleType: 'bike', vehicleNumber: '', vehicleModel: '',
-    rcNumber: '',
+    licenseNumber: '', vehicleType: 'bike', vehicleNumber: '', vehicleModel: ''
   });
 
   useEffect(() => {
@@ -250,7 +249,7 @@ export default function RegisterPage() {
                 </div>
 
                 {/* RC Number - NEW field for drivers */}
-                <div>
+                {/* <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
                     {t('rcNumber')}
                     <span className="ml-1.5 text-red-500">*</span>
@@ -264,7 +263,7 @@ export default function RegisterPage() {
                     onChange={update('rcNumber')}
                   />
                   <p className="text-xs text-gray-400 mt-1.5">Registration Certificate number of your vehicle</p>
-                </div>
+                </div> */}
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">{t('vehicleType')}</label>
@@ -296,7 +295,7 @@ export default function RegisterPage() {
                 </div>
                 <button
                   type="submit"
-                  disabled={loading || !form.licenseNumber || !form.rcNumber}
+                  disabled={loading || !form.licenseNumber}
                   className="btn-primary w-full py-3.5 text-sm"
                 >
                   {loading ? <Spinner size="sm" color="white" /> : t('register')}

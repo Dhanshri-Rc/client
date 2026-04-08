@@ -248,22 +248,7 @@ export default function RegisterPage() {
                   />
                 </div>
 
-                {/* RC Number - NEW field for drivers */}
-                {/* <div>
-                  <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
-                    {t('rcNumber')}
-                    <span className="ml-1.5 text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="MH12AB1234"
-                    className="input-field"
-                    value={form.rcNumber}
-                    onChange={update('rcNumber')}
-                  />
-                  <p className="text-xs text-gray-400 mt-1.5">Registration Certificate number of your vehicle</p>
-                </div> */}
+               
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">{t('vehicleType')}</label>

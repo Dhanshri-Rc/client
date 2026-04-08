@@ -488,7 +488,7 @@ export default function BookingPage() {
       distance,
       packageDetails: {
         ...packageDetails,
-        weight: Number(packageDetails.weight) || 0,
+        weight: Number(packageDetails.weight) || 1,
       },
       paymentMethod,
       notes,
@@ -537,6 +537,28 @@ export default function BookingPage() {
             value={packageDetails.description}
             onChange={e => setPackageDetails({ ...packageDetails, description: e.target.value })}
           />
+          <input
+  type="number"
+  placeholder="Weight (kg)"
+  className="w-full border border-gray-300 rounded-xl px-4 py-3"
+  value={packageDetails.weight}
+  onChange={e => setPackageDetails({
+    ...packageDetails,
+    weight: e.target.value
+  })}
+/>
+
+<label className="flex items-center gap-2">
+  <input
+    type="checkbox"
+    checked={packageDetails.fragile}
+    onChange={e => setPackageDetails({
+      ...packageDetails,
+      fragile: e.target.checked
+    })}
+  />
+  Fragile item
+</label>
 
           <button
             onClick={() => setStep(1)}

@@ -57,14 +57,54 @@ export default function App() {
   return (
     <BrowserRouter>
       <SocketInitializer />
-      <Toaster
+      {/* <Toaster
         position="top-right"
         toastOptions={{
           duration: 4000,
           style: { borderRadius: '12px', fontFamily: 'Inter, sans-serif' },
           success: { iconTheme: { primary: '#f97316', secondary: '#fff' } },
         }}
-      />
+      /> */}
+      <Toaster
+  position="top-right"
+  toastOptions={{
+    duration: 4000,
+    style: {
+      borderRadius: '12px',
+      fontFamily: 'Inter, sans-serif',
+      background: '#000',  // black background
+      color: '#fff',       // white text
+      padding: '12px 16px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+    },
+    success: {
+      style: {
+        background: '#111', // slightly lighter black for success
+        color: '#fff',
+      },
+      iconTheme: {
+        primary: '#fff',    // white icon
+        secondary: '#000',  // black icon background
+      },
+    },
+    error: {
+      style: {
+        background: '#111', // slightly lighter black for error
+        color: '#fff',
+      },
+      iconTheme: {
+        primary: '#fff',
+        secondary: '#000',
+      },
+    },
+    loading: {
+      style: {
+        background: '#111',
+        color: '#fff',
+      },
+    },
+  }}
+/>
       <Routes>
         {/* Public */}
         <Route path="/" element={<HomePage />} />

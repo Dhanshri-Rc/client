@@ -14,45 +14,7 @@ const VEHICLES = [
   { type: 'large_truck', icon: '🚛', name: 'Large Truck', desc: 'Up to 2000 kg', basePrice: 150, pricePerKm: 25 },
 ];
 
-// Google Maps Autocomplete input
-// function PlaceInput({ label, placeholder, value, onChange, icon: Icon }) {
-//   const inputRef = useRef(null);
-//   const autocompleteRef = useRef(null);
 
-//   useEffect(() => {
-//     if (!window.google || !inputRef.current) return;
-//     autocompleteRef.current = new window.google.maps.places.Autocomplete(inputRef.current, {
-//       componentRestrictions: { country: 'in' },
-//       fields: ['geometry', 'formatted_address'],
-//     });
-//     autocompleteRef.current.addListener('place_changed', () => {
-//       const place = autocompleteRef.current.getPlace();
-//       if (place.geometry) {
-//         onChange({
-//           address: place.formatted_address,
-//           lat: place.geometry.location.lat(),
-//           lng: place.geometry.location.lng(),
-//         });
-//       }
-//     });
-//   }, []);
-
-//   return (
-//     <div>
-//       <label className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
-//       <div className="relative">
-//         <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-//         <input
-//           ref={inputRef}
-//           type="text"
-//           placeholder={placeholder}
-//           defaultValue={value?.address || ''}
-//           className="input-field pl-10"
-//         />
-//       </div>
-//     </div>
-//   );
-// }
 
 function PlaceInput({ label, placeholder, value, onChange, icon: Icon }) {
   return (
@@ -97,26 +59,9 @@ export default function BookingPage() {
     return () => dispatch(clearEstimate());
   }, []);
 
-  // const handleEstimate = async () => {
-  //   if (!pickup || !dropoff) return toast.error('Please select pickup and drop locations');
-  //   const distance = calculateDistance(pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
-  //   await dispatch(getFareEstimate({ pickup, dropoff, vehicleType }));
-  //   setStep(2);
-  // };
 
-  // const handlePlaceOrder = async () => {
-  //   if (!pickup || !dropoff || !estimate) return;
-  //   const distance = calculateDistance(pickup.lat, pickup.lng, dropoff.lat, dropoff.lng);
-  //   const result = await dispatch(createOrder({
-  //     vehicleType, pickup, dropoff, distance,
-  //     packageDetails: { ...packageDetails, weight: Number(packageDetails.weight) || 0 },
-  //     paymentMethod, notes,
-  //   }));
-  //   if (createOrder.fulfilled.match(result)) {
-  //     toast.success('Order placed successfully!');
-  //     navigate(`/track/${result.payload._id}`);
-  //   }
-  // };
+
+
 const handleEstimate = async () => {
   if (!pickup || !dropoff) {
     return toast.error('Please select pickup and drop locations');

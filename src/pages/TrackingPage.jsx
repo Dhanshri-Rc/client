@@ -374,132 +374,320 @@ export default function TrackingPage() {
   const driver = currentOrder.driver;
   const driverUser = driver?.user;
 
-  return (
-    <div className="max-w-4xl mx-auto animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <Link to="/dashboard" className="p-2 rounded-xl hover:bg-gray-100">
-          <ArrowLeft className="w-5 h-5 text-gray-600" />
-        </Link>
+  // return (
+  //   <div className="max-w-4xl mx-auto animate-fade-in">
+  //     {/* Header */}
+  //     <div className="flex items-center gap-3 mb-6">
+  //       <Link to="/dashboard" className="p-2 rounded-xl hover:bg-gray-100">
+  //         <ArrowLeft className="w-5 h-5 text-gray-600" />
+  //       </Link>
 
-        <div>
-          <h1 className="text-2xl font-bold">{t('trackOrder')}</h1>
-          <p className="text-gray-500 text-sm">
-            Order #{currentOrder._id?.slice(-8)?.toUpperCase()}
-          </p>
-        </div>
+  //       <div>
+  //         <h1 className="text-2xl font-bold">{t('trackOrder')}</h1>
+  //         <p className="text-gray-500 text-sm">
+  //           Order #{currentOrder._id?.slice(-8)?.toUpperCase()}
+  //         </p>
+  //       </div>
 
-        <div className="ml-auto">
-          <StatusBadge status={currentOrder.status} />
-        </div>
+  //       <div className="ml-auto">
+  //         <StatusBadge status={currentOrder.status} />
+  //       </div>
+  //     </div>
+
+  //     {/* Layout */}
+  //     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+  //       {/* ✅ MAP SECTION (Leaflet) */}
+  //       <div className="card p-0 overflow-hidden h-80 lg:h-full min-h-64">
+  //         <MapComponent
+  //           pickup={currentOrder.pickup}
+  //           dropoff={currentOrder.dropoff}
+  //           driverLocation={driverLocation}
+  //         />
+  //       </div>
+
+  //       {/* Details */}
+  //       <div className="space-y-4">
+
+  //         {/* Status */}
+  //         <div className="card">
+  //           <h3 className="font-semibold mb-4">Delivery Progress</h3>
+
+  //           {STATUS_STEPS.map((s, idx) => {
+  //             const done = currentStepIdx > idx;
+  //             const active = currentStepIdx === idx;
+
+  //             return (
+  //               <div key={s} className={`flex items-center gap-3 ${done || active ? '' : 'opacity-40'}`}>
+  //                 <div className={`w-9 h-9 flex items-center justify-center rounded-full
+  //                   ${done ? 'bg-green-500 text-white' :
+  //                     active ? 'bg-primary-500 text-white animate-pulse' :
+  //                     'bg-gray-100 text-gray-400'}`}>
+  //                   {done ? '✓' : STATUS_ICONS[s]}
+  //                 </div>
+
+  //                 <p className="text-sm font-medium">{STATUS_LABELS[s]}</p>
+  //               </div>
+  //             );
+  //           })}
+  //         </div>
+
+  //         {/* Driver */}
+  //         {driver && (
+  //           <div className="card">
+  //             <h3 className="font-semibold mb-3">Your Driver</h3>
+
+  //             <div className="flex items-center gap-3">
+  //               <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center font-bold">
+  //                 {driverUser?.name?.charAt(0) || 'D'}
+  //               </div>
+
+  //               <div className="flex-1">
+  //                 <p className="font-semibold">{driverUser?.name}</p>
+  //                 <p className="text-sm text-gray-500">
+  //                   {getVehicleIcon(driver.vehicleType)} {driver.vehicleNumber}
+  //                 </p>
+  //               </div>
+
+  //               {driverUser?.phone && (
+  //                 <a href={`tel:${driverUser.phone}`}>
+  //                   <Phone className="w-5 h-5 text-green-600" />
+  //                 </a>
+  //               )}
+  //             </div>
+  //           </div>
+  //         )}
+
+  //         {/* Order Details */}
+  //         <div className="card">
+  //           <h3 className="font-semibold mb-3">Order Details</h3>
+
+  //           <p><strong>Pickup:</strong> {currentOrder.pickup?.address}</p>
+  //           <p><strong>Drop:</strong> {currentOrder.dropoff?.address}</p>
+
+  //           <div className="flex justify-between mt-2">
+  //             <span>{getVehicleName(currentOrder.vehicleType)}</span>
+  //             <span className="font-bold text-primary-600">
+  //               {formatCurrency(currentOrder.fare?.total)}
+  //             </span>
+  //           </div>
+  //         </div>
+
+  //         {/* Rating */}
+  //         {currentOrder.status === 'delivered' && !currentOrder.rating?.score && (
+  //           <div className="card">
+  //             {!showRating ? (
+  //               <button onClick={() => setShowRating(true)} className="btn-primary">
+  //                 Rate Delivery
+  //               </button>
+  //             ) : (
+  //               <>
+  //                 <div className="flex gap-2">
+  //                   {[1,2,3,4,5].map(s => (
+  //                     <button key={s} onClick={() => setRatingScore(s)}>
+  //                       ★
+  //                     </button>
+  //                   ))}
+  //                 </div>
+
+  //                 <button onClick={handleRateOrder} className="btn-primary">
+  //                   {submittingRating ? <Spinner size="sm" /> : 'Submit'}
+  //                 </button>
+  //               </>
+  //             )}
+  //           </div>
+  //         )}
+
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
+
+return (
+  <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen space-y-6">
+
+    {/* HEADER */}
+    <div className="flex items-center gap-3">
+      <Link to="/dashboard" className="p-2 rounded-lg hover:bg-gray-200">
+        <ArrowLeft className="w-5 h-5 text-black" />
+      </Link>
+
+      <div>
+        <h1 className="text-xl sm:text-2xl font-bold text-black">
+          {t('trackOrder')}
+        </h1>
+        <p className="text-gray-500 text-sm">
+          Order #{currentOrder._id?.slice(-8)?.toUpperCase()}
+        </p>
       </div>
 
-      {/* Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="ml-auto">
+        <StatusBadge status={currentOrder.status} />
+      </div>
+    </div>
 
-        {/* ✅ MAP SECTION (Leaflet) */}
-        <div className="card p-0 overflow-hidden h-80 lg:h-full min-h-64">
-          <MapComponent
-            pickup={currentOrder.pickup}
-            dropoff={currentOrder.dropoff}
-            driverLocation={driverLocation}
-          />
-        </div>
+    {/* MAIN GRID */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        {/* Details */}
-        <div className="space-y-4">
+      {/* MAP */}
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden h-80 lg:h-full">
+        <MapComponent
+          pickup={currentOrder.pickup}
+          dropoff={currentOrder.dropoff}
+          driverLocation={driverLocation}
+        />
+      </div>
 
-          {/* Status */}
-          <div className="card">
-            <h3 className="font-semibold mb-4">Delivery Progress</h3>
+      {/* RIGHT PANEL */}
+      <div className="space-y-4">
 
+        {/* STATUS */}
+        <div className="bg-white rounded-2xl shadow-sm p-5">
+          <h3 className="font-semibold text-black mb-4">
+            Delivery Progress
+          </h3>
+
+          <div className="space-y-3">
             {STATUS_STEPS.map((s, idx) => {
               const done = currentStepIdx > idx;
               const active = currentStepIdx === idx;
 
               return (
-                <div key={s} className={`flex items-center gap-3 ${done || active ? '' : 'opacity-40'}`}>
-                  <div className={`w-9 h-9 flex items-center justify-center rounded-full
-                    ${done ? 'bg-green-500 text-white' :
-                      active ? 'bg-primary-500 text-white animate-pulse' :
-                      'bg-gray-100 text-gray-400'}`}>
+                <div
+                  key={s}
+                  className={`flex items-center gap-3 ${
+                    done || active ? '' : 'opacity-40'
+                  }`}
+                >
+                  <div
+                    className={`w-9 h-9 flex items-center justify-center rounded-full text-sm
+                      ${
+                        done
+                          ? 'bg-black text-white'
+                          : active
+                          ? 'bg-gray-800 text-white animate-pulse'
+                          : 'bg-gray-200 text-gray-500'
+                      }`}
+                  >
                     {done ? '✓' : STATUS_ICONS[s]}
                   </div>
 
-                  <p className="text-sm font-medium">{STATUS_LABELS[s]}</p>
+                  <p className="text-sm font-medium text-black">
+                    {STATUS_LABELS[s]}
+                  </p>
                 </div>
               );
             })}
           </div>
+        </div>
 
-          {/* Driver */}
-          {driver && (
-            <div className="card">
-              <h3 className="font-semibold mb-3">Your Driver</h3>
+        {/* DRIVER */}
+        {driver && (
+          <div className="bg-white rounded-2xl shadow-sm p-5">
+            <h3 className="font-semibold text-black mb-3">
+              Your Driver
+            </h3>
 
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center font-bold">
-                  {driverUser?.name?.charAt(0) || 'D'}
-                </div>
-
-                <div className="flex-1">
-                  <p className="font-semibold">{driverUser?.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {getVehicleIcon(driver.vehicleType)} {driver.vehicleNumber}
-                  </p>
-                </div>
-
-                {driverUser?.phone && (
-                  <a href={`tel:${driverUser.phone}`}>
-                    <Phone className="w-5 h-5 text-green-600" />
-                  </a>
-                )}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-bold">
+                {driverUser?.name?.charAt(0) || 'D'}
               </div>
-            </div>
-          )}
 
-          {/* Order Details */}
-          <div className="card">
-            <h3 className="font-semibold mb-3">Order Details</h3>
+              <div className="flex-1">
+                <p className="font-semibold text-black">
+                  {driverUser?.name}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {getVehicleIcon(driver.vehicleType)} {driver.vehicleNumber}
+                </p>
+              </div>
 
-            <p><strong>Pickup:</strong> {currentOrder.pickup?.address}</p>
-            <p><strong>Drop:</strong> {currentOrder.dropoff?.address}</p>
-
-            <div className="flex justify-between mt-2">
-              <span>{getVehicleName(currentOrder.vehicleType)}</span>
-              <span className="font-bold text-primary-600">
-                {formatCurrency(currentOrder.fare?.total)}
-              </span>
-            </div>
-          </div>
-
-          {/* Rating */}
-          {currentOrder.status === 'delivered' && !currentOrder.rating?.score && (
-            <div className="card">
-              {!showRating ? (
-                <button onClick={() => setShowRating(true)} className="btn-primary">
-                  Rate Delivery
-                </button>
-              ) : (
-                <>
-                  <div className="flex gap-2">
-                    {[1,2,3,4,5].map(s => (
-                      <button key={s} onClick={() => setRatingScore(s)}>
-                        ★
-                      </button>
-                    ))}
-                  </div>
-
-                  <button onClick={handleRateOrder} className="btn-primary">
-                    {submittingRating ? <Spinner size="sm" /> : 'Submit'}
-                  </button>
-                </>
+              {driverUser?.phone && (
+                <a href={`tel:${driverUser.phone}`}>
+                  <Phone className="w-5 h-5 text-black" />
+                </a>
               )}
             </div>
-          )}
+          </div>
+        )}
 
+        {/* ORDER DETAILS */}
+        <div className="bg-white rounded-2xl shadow-sm p-5">
+          <h3 className="font-semibold text-black mb-3">
+            Order Details
+          </h3>
+
+          <p className="text-sm text-gray-600">
+            <strong>Pickup:</strong> {currentOrder.pickup?.address}
+          </p>
+          <p className="text-sm text-gray-600">
+            <strong>Drop:</strong> {currentOrder.dropoff?.address}
+          </p>
+
+          <div className="flex justify-between mt-3 text-sm">
+            <span className="text-gray-500">
+              {getVehicleName(currentOrder.vehicleType)}
+            </span>
+            <span className="font-bold text-black">
+              {formatCurrency(currentOrder.fare?.total)}
+            </span>
+          </div>
         </div>
+
+        {/* RATING */}
+        {currentOrder.status === 'delivered' && !currentOrder.rating?.score && (
+          <div className="bg-white rounded-2xl shadow-sm p-5">
+
+            {!showRating ? (
+              <button
+                onClick={() => setShowRating(true)}
+                className="w-full bg-black text-white py-2 rounded-lg"
+              >
+                Rate Delivery
+              </button>
+            ) : (
+              <div className="space-y-3">
+
+                <div className="flex gap-2 justify-center text-xl">
+                  {[1, 2, 3, 4, 5].map(s => (
+                    <button
+                      key={s}
+                      onClick={() => setRatingScore(s)}
+                      className={`${
+                        ratingScore >= s ? 'text-black' : 'text-gray-300'
+                      }`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+
+                <textarea
+                  placeholder="Write review (optional)"
+                  className="w-full border border-gray-200 rounded-lg p-2 text-sm"
+                  value={ratingReview}
+                  onChange={e => setRatingReview(e.target.value)}
+                />
+
+                <button
+                  onClick={handleRateOrder}
+                  className="w-full bg-black text-white py-2 rounded-lg"
+                >
+                  {submittingRating ? (
+                    <Spinner size="sm" color="white" />
+                  ) : (
+                    'Submit'
+                  )}
+                </button>
+
+              </div>
+            )}
+          </div>
+        )}
+
       </div>
     </div>
-  );
+  </div>
+);
+
 }

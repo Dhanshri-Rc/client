@@ -194,7 +194,7 @@ return (
               key={order._id}
               className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition"
             >
-              <div className="text-2xl">{getVehicleIcon(order.vehicleType)}</div>
+              <div className="text-4xl">{getVehicleIcon(order.vehicleType)}</div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">

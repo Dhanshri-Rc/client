@@ -14,45 +14,7 @@ const VEHICLES = [
   { type: 'large_truck', icon: '🚛', name: 'Large Truck', desc: 'Up to 2000 kg', basePrice: 150, pricePerKm: 25 },
 ];
 
-// Google Maps Autocomplete input
-// function PlaceInput({ label, placeholder, value, onChange, icon: Icon }) {
-//   const inputRef = useRef(null);
-//   const autocompleteRef = useRef(null);
 
-//   useEffect(() => {
-//     if (!window.google || !inputRef.current) return;
-//     autocompleteRef.current = new window.google.maps.places.Autocomplete(inputRef.current, {
-//       componentRestrictions: { country: 'in' },
-//       fields: ['geometry', 'formatted_address'],
-//     });
-//     autocompleteRef.current.addListener('place_changed', () => {
-//       const place = autocompleteRef.current.getPlace();
-//       if (place.geometry) {
-//         onChange({
-//           address: place.formatted_address,
-//           lat: place.geometry.location.lat(),
-//           lng: place.geometry.location.lng(),
-//         });
-//       }
-//     });
-//   }, []);
-
-//   return (
-//     <div>
-//       <label className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
-//       <div className="relative">
-//         <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-//         <input
-//           ref={inputRef}
-//           type="text"
-//           placeholder={placeholder}
-//           defaultValue={value?.address || ''}
-//           className="input-field pl-10"
-//         />
-//       </div>
-//     </div>
-//   );
-// }
 
 function PlaceInput({ label, placeholder, value, onChange, icon: Icon }) {
   return (
@@ -184,212 +146,443 @@ const handlePlaceOrder = async () => {
 
   const steps = ['Location', 'Vehicle', 'Confirm'];
 
-  return (
-    <div className="max-w-2xl mx-auto animate-fade-in">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{t('bookDelivery')}</h1>
-        <p className="text-gray-500 mt-1">Fill in delivery details below</p>
-      </div>
+  // return (
+  //   <div className="max-w-2xl mx-auto animate-fade-in">
+  //     <div className="mb-6">
+  //       <h1 className="text-2xl font-bold text-gray-900">{t('bookDelivery')}</h1>
+  //       <p className="text-gray-500 mt-1">Fill in delivery details below</p>
+  //     </div>
 
-      {/* Step indicator */}
-      <div className="card mb-6">
-        <StepIndicator steps={steps} currentStep={step} />
-      </div>
+  //     {/* Step indicator */}
+  //     <div className="card mb-6">
+  //       <StepIndicator steps={steps} currentStep={step} />
+  //     </div>
 
-      {error && <ErrorAlert message={error} />}
+  //     {error && <ErrorAlert message={error} />}
 
-      {/* Step 0: Locations */}
-      {step === 0 && (
-        <div className="card space-y-4 animate-slide-up">
-          <PlaceInput
-            label={t('pickupLocation')}
-            placeholder="Enter pickup address"
-            value={pickup}
-            onChange={setPickup}
-            icon={Navigation}
+  //     {/* Step 0: Locations */}
+  //     {step === 0 && (
+  //       <div className="card space-y-4 animate-slide-up">
+  //         <PlaceInput
+  //           label={t('pickupLocation')}
+  //           placeholder="Enter pickup address"
+  //           value={pickup}
+  //           onChange={setPickup}
+  //           icon={Navigation}
+  //         />
+  //         <div className="flex items-center gap-3 py-1">
+  //           <div className="flex-1 h-px bg-gray-200" />
+  //           <div className="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center">
+  //             <div className="w-2 h-2 rounded-full bg-primary-400" />
+  //           </div>
+  //           <div className="flex-1 h-px bg-gray-200" />
+  //         </div>
+  //         <PlaceInput
+  //           label={t('dropLocation')}
+  //           placeholder="Enter drop address"
+  //           value={dropoff}
+  //           onChange={setDropoff}
+  //           icon={MapPin}
+  //         />
+  //         <div className="pt-2">
+  //           <label className="block text-sm font-medium text-gray-700 mb-1.5">Package Description (optional)</label>
+  //           <input
+  //             type="text" placeholder="What are you shipping?"
+  //             className="input-field"
+  //             value={packageDetails.description}
+  //             onChange={e => setPackageDetails({ ...packageDetails, description: e.target.value })}
+  //           />
+  //         </div>
+  //         <div className="grid grid-cols-2 gap-3">
+  //           <div>
+  //             <label className="block text-sm font-medium text-gray-700 mb-1.5">Weight (kg)</label>
+  //             <input
+  //               type="number" placeholder="0" min="0"
+  //               className="input-field"
+  //               value={packageDetails.weight}
+  //               onChange={e => setPackageDetails({ ...packageDetails, weight: e.target.value })}
+  //             />
+  //           </div>
+  //           <div className="flex items-end pb-1">
+  //             <label className="flex items-center gap-2 cursor-pointer">
+  //               <input
+  //                 type="checkbox"
+  //                 className="w-4 h-4 rounded text-primary-500"
+  //                 checked={packageDetails.fragile}
+  //                 onChange={e => setPackageDetails({ ...packageDetails, fragile: e.target.checked })}
+  //               />
+  //               <span className="text-sm text-gray-700">Fragile item</span>
+  //             </label>
+  //           </div>
+  //         </div>
+  //         <button
+  //           onClick={() => { if (!pickup) return toast.error('Select pickup'); if (!dropoff) return toast.error('Select dropoff'); setStep(1); }}
+  //           className="btn-primary w-full py-3"
+  //         >
+  //           Next: Select Vehicle
+  //         </button>
+  //       </div>
+  //     )}
+
+  //     {/* Step 1: Vehicle */}
+  //     {step === 1 && (
+  //       <div className="space-y-4 animate-slide-up">
+  //         <div className="card">
+  //           <h3 className="font-semibold text-gray-900 mb-4">{t('selectVehicle')}</h3>
+  //           <div className="space-y-3">
+  //             {VEHICLES.map((v) => (
+  //               <button
+  //                 key={v.type}
+  //                 onClick={() => setVehicleType(v.type)}
+  //                 className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${
+  //                   vehicleType === v.type ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-gray-300'
+  //                 }`}
+  //               >
+  //                 <span className="text-3xl">{v.icon}</span>
+  //                 <div className="flex-1 text-left">
+  //                   <p className={`font-semibold ${vehicleType === v.type ? 'text-primary-700' : 'text-gray-900'}`}>{v.name}</p>
+  //                   <p className="text-sm text-gray-500">{v.desc}</p>
+  //                 </div>
+  //                 <div className="text-right">
+  //                   <p className="text-sm font-bold text-gray-700">₹{v.basePrice} base</p>
+  //                   <p className="text-xs text-gray-400">+₹{v.pricePerKm}/km</p>
+  //                 </div>
+  //                 {vehicleType === v.type && <CheckCircle className="w-5 h-5 text-primary-500 flex-shrink-0" />}
+  //               </button>
+  //             ))}
+  //           </div>
+  //         </div>
+
+  //         <div className="card">
+  //           <h3 className="font-semibold text-gray-900 mb-3">Payment Method</h3>
+  //           <div className="grid grid-cols-2 gap-3">
+  //             {[{ value: 'online', label: '💳 Online', sub: 'Razorpay' }, { value: 'cash', label: '💵 Cash', sub: 'Pay on delivery' }].map(p => (
+  //               <button key={p.value} onClick={() => setPaymentMethod(p.value)}
+  //                 className={`p-3 rounded-xl border-2 text-left transition-all ${paymentMethod === p.value ? 'border-primary-500 bg-primary-50' : 'border-gray-200'}`}>
+  //                 <p className={`font-medium text-sm ${paymentMethod === p.value ? 'text-primary-700' : 'text-gray-700'}`}>{p.label}</p>
+  //                 <p className="text-xs text-gray-400">{p.sub}</p>
+  //               </button>
+  //             ))}
+  //           </div>
+  //         </div>
+
+  //         <div className="card">
+  //           <label className="block text-sm font-medium text-gray-700 mb-1.5">Additional Notes</label>
+  //           <textarea
+  //             className="input-field resize-none" rows={2}
+  //             placeholder="Any special instructions..."
+  //             value={notes}
+  //             onChange={e => setNotes(e.target.value)}
+  //           />
+  //         </div>
+
+  //         <div className="flex gap-3">
+  //           <button onClick={() => setStep(0)} className="btn-secondary flex-1 py-3">{t('back')}</button>
+  //           <button onClick={handleEstimate} disabled={loading} className="btn-primary flex-1 py-3">
+  //             {loading ? <Spinner size="sm" color="white" /> : 'Get Estimate'}
+  //           </button>
+  //         </div>
+  //       </div>
+  //     )}
+
+  //     {/* Step 2: Confirm & Pay */}
+  //     {step === 2 && estimate && (
+  //       <div className="space-y-4 animate-slide-up">
+  //         {/* Route summary */}
+  //         <div className="card space-y-3">
+  //           <h3 className="font-semibold text-gray-900">Delivery Summary</h3>
+  //           <div className="space-y-2 text-sm">
+  //             <div className="flex gap-3 items-start">
+  //               <Navigation className="w-4 h-4 text-primary-500 mt-0.5 flex-shrink-0" />
+  //               <div>
+  //                 <p className="text-xs text-gray-400 font-medium">PICKUP</p>
+  //                 <p className="text-gray-700">{pickup?.address}</p>
+  //               </div>
+  //             </div>
+  //             <div className="ml-2 w-px h-4 bg-gray-200" />
+  //             <div className="flex gap-3 items-start">
+  //               <MapPin className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+  //               <div>
+  //                 <p className="text-xs text-gray-400 font-medium">DROP</p>
+  //                 <p className="text-gray-700">{dropoff?.address}</p>
+  //               </div>
+  //             </div>
+  //           </div>
+  //           <div className="flex items-center gap-4 pt-2 border-t border-gray-100 text-sm">
+  //             <div className="flex items-center gap-1.5 text-gray-500">
+  //               <MapPin className="w-4 h-4" />{estimate.distance} {t('km')}
+  //             </div>
+  //             <div className="flex items-center gap-1.5 text-gray-500">
+  //               <Clock className="w-4 h-4" />{estimate.estimatedTime} {t('mins')}
+  //             </div>
+  //             <div className="flex items-center gap-1.5 text-gray-500">
+  //               <span className="text-xl">{getVehicleIcon(vehicleType)}</span>
+  //               {VEHICLES.find(v => v.type === vehicleType)?.name}
+  //             </div>
+  //           </div>
+  //         </div>
+
+  //         {/* Fare breakdown */}
+  //         <div className="card">
+  //           <h3 className="font-semibold text-gray-900 mb-3">{t('estimatedFare')}</h3>
+  //           <div className="space-y-2 text-sm">
+  //             <div className="flex justify-between text-gray-600">
+  //               <span>{t('baseFare')}</span>
+  //               <span>{formatCurrency(estimate.fare.base)}</span>
+  //             </div>
+  //             <div className="flex justify-between text-gray-600">
+  //               <span>Distance ({estimate.distance} km × ₹{estimate.fare.perKm})</span>
+  //               <span>{formatCurrency(estimate.fare.distanceFare)}</span>
+  //             </div>
+  //             <div className="flex justify-between font-bold text-gray-900 pt-2 border-t border-gray-100 text-base">
+  //               <span>{t('totalFare')}</span>
+  //               <span className="text-primary-600">{formatCurrency(estimate.fare.total)}</span>
+  //             </div>
+  //           </div>
+  //           <div className="mt-3 bg-blue-50 rounded-xl p-3 text-xs text-blue-700">
+  //             💡 Payment: <strong>{paymentMethod === 'online' ? 'Online (Razorpay)' : 'Cash on delivery'}</strong>
+  //           </div>
+  //         </div>
+
+  //         <div className="flex gap-3">
+  //           <button onClick={() => setStep(1)} className="btn-secondary flex-1 py-3">{t('back')}</button>
+  //           <button onClick={handlePlaceOrder} disabled={loading} className="btn-primary flex-1 py-3">
+  //             {loading ? <Spinner size="sm" color="white" /> : t('placeOrder')}
+  //           </button>
+  //         </div>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
+
+return (
+  <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 bg-gray-100 min-h-screen">
+
+    {/* HEADER */}
+    <div>
+      <h1 className="text-xl sm:text-2xl font-bold text-black">
+        {t('bookDelivery')}
+      </h1>
+      <p className="text-gray-500 text-sm">
+        Fill in delivery details below
+      </p>
+    </div>
+
+    {/* STEP INDICATOR */}
+    <div className="bg-white rounded-2xl shadow-sm p-4">
+      <StepIndicator steps={steps} currentStep={step} />
+    </div>
+
+    {error && <ErrorAlert message={error} />}
+
+    {/* STEP 0 */}
+    {step === 0 && (
+      <div className="bg-white rounded-2xl shadow-sm p-5 space-y-4">
+
+        <PlaceInput {...{
+          label: t('pickupLocation'),
+          placeholder: "Enter pickup address",
+          value: pickup,
+          onChange: setPickup,
+          icon: Navigation
+        }} />
+
+        <div className="flex items-center gap-2">
+          <div className="flex-1 h-px bg-gray-200" />
+          <div className="w-2 h-2 bg-black rounded-full" />
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+
+        <PlaceInput {...{
+          label: t('dropLocation'),
+          placeholder: "Enter drop address",
+          value: dropoff,
+          onChange: setDropoff,
+          icon: MapPin
+        }} />
+
+        {/* PACKAGE */}
+        <input
+          type="text"
+          placeholder="Package description"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+          value={packageDetails.description}
+          onChange={e => setPackageDetails({ ...packageDetails, description: e.target.value })}
+        />
+
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            type="number"
+            placeholder="Weight (kg)"
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+            value={packageDetails.weight}
+            onChange={e => setPackageDetails({ ...packageDetails, weight: e.target.value })}
           />
-          <div className="flex items-center gap-3 py-1">
-            <div className="flex-1 h-px bg-gray-200" />
-            <div className="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-primary-400" />
-            </div>
-            <div className="flex-1 h-px bg-gray-200" />
-          </div>
-          <PlaceInput
-            label={t('dropLocation')}
-            placeholder="Enter drop address"
-            value={dropoff}
-            onChange={setDropoff}
-            icon={MapPin}
-          />
-          <div className="pt-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Package Description (optional)</label>
+
+          <label className="flex items-center gap-2 text-sm text-gray-600">
             <input
-              type="text" placeholder="What are you shipping?"
-              className="input-field"
-              value={packageDetails.description}
-              onChange={e => setPackageDetails({ ...packageDetails, description: e.target.value })}
+              type="checkbox"
+              checked={packageDetails.fragile}
+              onChange={e => setPackageDetails({ ...packageDetails, fragile: e.target.checked })}
             />
+            Fragile
+          </label>
+        </div>
+
+        <button
+          onClick={() => {
+            if (!pickup) return toast.error('Select pickup');
+            if (!dropoff) return toast.error('Select dropoff');
+            setStep(1);
+          }}
+          className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-900 transition"
+        >
+          Next
+        </button>
+      </div>
+    )}
+
+    {/* STEP 1 */}
+    {step === 1 && (
+      <div className="space-y-4">
+
+        {/* VEHICLES */}
+        <div className="bg-white rounded-2xl shadow-sm p-5">
+          <h3 className="font-semibold text-black mb-4">{t('selectVehicle')}</h3>
+
+          <div className="grid sm:grid-cols-2 gap-3">
+            {VEHICLES.map(v => (
+              <button
+                key={v.type}
+                onClick={() => setVehicleType(v.type)}
+                className={`p-4 rounded-xl border text-left transition ${
+                  vehicleType === v.type
+                    ? 'border-black bg-gray-50'
+                    : 'border-gray-200'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{v.icon}</span>
+                  <div>
+                    <p className="font-semibold text-black">{v.name}</p>
+                    <p className="text-xs text-gray-500">{v.desc}</p>
+                  </div>
+                </div>
+
+                <div className="mt-2 text-xs text-gray-500">
+                  ₹{v.basePrice} + ₹{v.pricePerKm}/km
+                </div>
+              </button>
+            ))}
           </div>
+        </div>
+
+        {/* PAYMENT */}
+        <div className="bg-white rounded-2xl shadow-sm p-5">
+          <h3 className="font-semibold text-black mb-3">Payment</h3>
+
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Weight (kg)</label>
-              <input
-                type="number" placeholder="0" min="0"
-                className="input-field"
-                value={packageDetails.weight}
-                onChange={e => setPackageDetails({ ...packageDetails, weight: e.target.value })}
-              />
-            </div>
-            <div className="flex items-end pb-1">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 rounded text-primary-500"
-                  checked={packageDetails.fragile}
-                  onChange={e => setPackageDetails({ ...packageDetails, fragile: e.target.checked })}
-                />
-                <span className="text-sm text-gray-700">Fragile item</span>
-              </label>
-            </div>
+            {[
+              { value: 'online', label: 'Online' },
+              { value: 'cash', label: 'Cash' }
+            ].map(p => (
+              <button
+                key={p.value}
+                onClick={() => setPaymentMethod(p.value)}
+                className={`p-3 rounded-lg border ${
+                  paymentMethod === p.value
+                    ? 'border-black bg-gray-50'
+                    : 'border-gray-200'
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
           </div>
+        </div>
+
+        {/* NOTES */}
+        <textarea
+          className="w-full border border-gray-200 rounded-lg p-3 text-sm"
+          placeholder="Notes..."
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+        />
+
+        <div className="flex gap-3">
           <button
-            onClick={() => { if (!pickup) return toast.error('Select pickup'); if (!dropoff) return toast.error('Select dropoff'); setStep(1); }}
-            className="btn-primary w-full py-3"
+            onClick={() => setStep(0)}
+            className="flex-1 border border-gray-300 py-3 rounded-lg"
           >
-            Next: Select Vehicle
+            Back
+          </button>
+
+          <button
+            onClick={handleEstimate}
+            className="flex-1 bg-black text-white py-3 rounded-lg"
+          >
+            {loading ? <Spinner size="sm" color="white" /> : 'Estimate'}
           </button>
         </div>
-      )}
+      </div>
+    )}
 
-      {/* Step 1: Vehicle */}
-      {step === 1 && (
-        <div className="space-y-4 animate-slide-up">
-          <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-4">{t('selectVehicle')}</h3>
-            <div className="space-y-3">
-              {VEHICLES.map((v) => (
-                <button
-                  key={v.type}
-                  onClick={() => setVehicleType(v.type)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${
-                    vehicleType === v.type ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <span className="text-3xl">{v.icon}</span>
-                  <div className="flex-1 text-left">
-                    <p className={`font-semibold ${vehicleType === v.type ? 'text-primary-700' : 'text-gray-900'}`}>{v.name}</p>
-                    <p className="text-sm text-gray-500">{v.desc}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-gray-700">₹{v.basePrice} base</p>
-                    <p className="text-xs text-gray-400">+₹{v.pricePerKm}/km</p>
-                  </div>
-                  {vehicleType === v.type && <CheckCircle className="w-5 h-5 text-primary-500 flex-shrink-0" />}
-                </button>
-              ))}
-            </div>
-          </div>
+    {/* STEP 2 */}
+    {step === 2 && estimate && (
+      <div className="space-y-4">
 
-          <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">Payment Method</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {[{ value: 'online', label: '💳 Online', sub: 'Razorpay' }, { value: 'cash', label: '💵 Cash', sub: 'Pay on delivery' }].map(p => (
-                <button key={p.value} onClick={() => setPaymentMethod(p.value)}
-                  className={`p-3 rounded-xl border-2 text-left transition-all ${paymentMethod === p.value ? 'border-primary-500 bg-primary-50' : 'border-gray-200'}`}>
-                  <p className={`font-medium text-sm ${paymentMethod === p.value ? 'text-primary-700' : 'text-gray-700'}`}>{p.label}</p>
-                  <p className="text-xs text-gray-400">{p.sub}</p>
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* SUMMARY */}
+        <div className="bg-white rounded-2xl shadow-sm p-5">
+          <h3 className="font-semibold text-black mb-3">Summary</h3>
 
-          <div className="card">
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Additional Notes</label>
-            <textarea
-              className="input-field resize-none" rows={2}
-              placeholder="Any special instructions..."
-              value={notes}
-              onChange={e => setNotes(e.target.value)}
-            />
-          </div>
+          <p className="text-sm text-gray-600">📍 {pickup?.address}</p>
+          <p className="text-sm text-gray-600">🏁 {dropoff?.address}</p>
 
-          <div className="flex gap-3">
-            <button onClick={() => setStep(0)} className="btn-secondary flex-1 py-3">{t('back')}</button>
-            <button onClick={handleEstimate} disabled={loading} className="btn-primary flex-1 py-3">
-              {loading ? <Spinner size="sm" color="white" /> : 'Get Estimate'}
-            </button>
+          <div className="flex gap-4 mt-3 text-sm text-gray-500">
+            <span>{estimate.distance} km</span>
+            <span>{estimate.estimatedTime} min</span>
           </div>
         </div>
-      )}
 
-      {/* Step 2: Confirm & Pay */}
-      {step === 2 && estimate && (
-        <div className="space-y-4 animate-slide-up">
-          {/* Route summary */}
-          <div className="card space-y-3">
-            <h3 className="font-semibold text-gray-900">Delivery Summary</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex gap-3 items-start">
-                <Navigation className="w-4 h-4 text-primary-500 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">PICKUP</p>
-                  <p className="text-gray-700">{pickup?.address}</p>
-                </div>
-              </div>
-              <div className="ml-2 w-px h-4 bg-gray-200" />
-              <div className="flex gap-3 items-start">
-                <MapPin className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">DROP</p>
-                  <p className="text-gray-700">{dropoff?.address}</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 pt-2 border-t border-gray-100 text-sm">
-              <div className="flex items-center gap-1.5 text-gray-500">
-                <MapPin className="w-4 h-4" />{estimate.distance} {t('km')}
-              </div>
-              <div className="flex items-center gap-1.5 text-gray-500">
-                <Clock className="w-4 h-4" />{estimate.estimatedTime} {t('mins')}
-              </div>
-              <div className="flex items-center gap-1.5 text-gray-500">
-                <span className="text-xl">{getVehicleIcon(vehicleType)}</span>
-                {VEHICLES.find(v => v.type === vehicleType)?.name}
-              </div>
-            </div>
+        {/* FARE */}
+        <div className="bg-white rounded-2xl shadow-sm p-5">
+          <h3 className="font-semibold text-black mb-3">Fare</h3>
+
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>Base</span>
+            <span>{formatCurrency(estimate.fare.base)}</span>
           </div>
 
-          {/* Fare breakdown */}
-          <div className="card">
-            <h3 className="font-semibold text-gray-900 mb-3">{t('estimatedFare')}</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-600">
-                <span>{t('baseFare')}</span>
-                <span>{formatCurrency(estimate.fare.base)}</span>
-              </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Distance ({estimate.distance} km × ₹{estimate.fare.perKm})</span>
-                <span>{formatCurrency(estimate.fare.distanceFare)}</span>
-              </div>
-              <div className="flex justify-between font-bold text-gray-900 pt-2 border-t border-gray-100 text-base">
-                <span>{t('totalFare')}</span>
-                <span className="text-primary-600">{formatCurrency(estimate.fare.total)}</span>
-              </div>
-            </div>
-            <div className="mt-3 bg-blue-50 rounded-xl p-3 text-xs text-blue-700">
-              💡 Payment: <strong>{paymentMethod === 'online' ? 'Online (Razorpay)' : 'Cash on delivery'}</strong>
-            </div>
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>Distance</span>
+            <span>{formatCurrency(estimate.fare.distanceFare)}</span>
           </div>
 
-          <div className="flex gap-3">
-            <button onClick={() => setStep(1)} className="btn-secondary flex-1 py-3">{t('back')}</button>
-            <button onClick={handlePlaceOrder} disabled={loading} className="btn-primary flex-1 py-3">
-              {loading ? <Spinner size="sm" color="white" /> : t('placeOrder')}
-            </button>
+          <div className="flex justify-between font-bold text-black mt-2">
+            <span>Total</span>
+            <span>{formatCurrency(estimate.fare.total)}</span>
           </div>
         </div>
-      )}
-    </div>
-  );
+
+        <div className="flex gap-3">
+          <button
+            onClick={() => setStep(1)}
+            className="flex-1 border border-gray-300 py-3 rounded-lg"
+          >
+            Back
+          </button>
+
+          <button
+            onClick={handlePlaceOrder}
+            className="flex-1 bg-black text-white py-3 rounded-lg"
+          >
+            {loading ? <Spinner size="sm" color="white" /> : t('placeOrder')}
+          </button>
+        </div>
+      </div>
+    )}
+
+  </div>
+);
+
 }

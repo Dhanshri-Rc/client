@@ -267,46 +267,53 @@ const toggleFAQ = (index) => {
   {/* Overlay */}
   <div className="absolute inset-0 bg-black/75" />
 
-  <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16 w-full">
-    <div className="grid lg:grid-cols-2 gap-16 items-center min-h-screen py-24">
+  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-16 w-full">
+    
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center py-16 lg:min-h-screen">
 
-      {/* LEFT SIDE (TEXT) */}
-      <div className="text-white space-y-6">
-        <h1 className="text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+      {/* LEFT SIDE */}
+      <div className="text-white space-y-5 text-center lg:text-left">
+        
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
           Go anywhere with <br />
-          <span className="text-gray-100">Swift<span className='text-gray-300'>Move</span></span>
+          <span className="text-gray-100">
+            Swift<span className="text-gray-300">Move</span>
+          </span>
         </h1>
 
-        <p className="text-lg text-gray-400 max-w-md">
+        <p className="text-base sm:text-lg text-gray-400 max-w-md mx-auto lg:mx-0">
           Request a ride or delivery in seconds. Fast, reliable, and affordable logistics at your fingertips.
         </p>
 
-        <div className="flex gap-6 text-sm text-gray-400 pt-4">
+        {/* Stats */}
+        <div className="flex justify-center lg:justify-start gap-6 sm:gap-10 text-sm text-gray-400 pt-4">
           <div>
-            <p className="text-white font-bold text-lg">50K+</p>
+            <p className="text-white font-bold text-lg sm:text-xl">50K+</p>
             Deliveries
           </div>
           <div>
-            <p className="text-white font-bold text-lg">10K+</p>
+            <p className="text-white font-bold text-lg sm:text-xl">10K+</p>
             Drivers
           </div>
           <div>
-            <p className="text-white font-bold text-lg">4.8★</p>
+            <p className="text-white font-bold text-lg sm:text-xl">4.8★</p>
             Rating
           </div>
         </div>
+
       </div>
 
-      {/* RIGHT SIDE (FORM ) */}
+      {/* RIGHT SIDE */}
       <div className="flex justify-center lg:justify-end">
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
-
-          <h2 className="text-xl font-semibold text-gray-900">
+        
+        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md p-5 sm:p-6 space-y-4">
+          
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
             Book a delivery
           </h2>
 
           {/* Pickup */}
-          <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3 focus-within:border-black transition">
+          <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 focus-within:border-black transition">
             <div className="w-2.5 h-2.5 bg-black rounded-full"></div>
             <input
               type="text"
@@ -317,11 +324,11 @@ const toggleFAQ = (index) => {
             />
           </div>
 
-          {/* Divider Line */}
-          <div className="border-l-2 border-dashed border-gray-300 ml-2 h-4"></div>
+          {/* Divider */}
+          <div className="border-l-2 border-dashed border-gray-300 ml-2 h-3 sm:h-4"></div>
 
           {/* Drop */}
-          <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3 focus-within:border-black transition">
+          <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 focus-within:border-black transition">
             <div className="w-2.5 h-2.5 bg-gray-800 rounded-sm"></div>
             <input
               type="text"
@@ -335,12 +342,13 @@ const toggleFAQ = (index) => {
           {/* Button */}
           <Link
             to="/book"
-            className="block w-full bg-black text-white py-3 rounded-lg font-semibold text-center hover:bg-gray-900 transition"
+            className="block w-full bg-black text-white py-2.5 sm:py-3 rounded-lg font-semibold text-center hover:bg-gray-900 transition"
           >
             Book now
           </Link>
 
         </div>
+
       </div>
 
     </div>
@@ -388,23 +396,26 @@ const toggleFAQ = (index) => {
     </div>
   </div>
 </section>
+{/* plan for later */}
+<section className="py-14 sm:py-16 lg:py-20 bg-white">
+  <div className="max-w-7xl mx-auto px-4 sm:px-5">
 
-<section className="py-20 bg-white">
-  <div className="max-w-7xl mx-auto px-5">
-
-    <h2 className="text-2xl font-bold text-gray-900 mb-8">
+    {/* Heading */}
+    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">
       Plan for later
     </h2>
 
-    <div className="grid md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
       {/* LEFT BIG CARD */}
-      <div className="md:col-span-2 bg-[#cfe7ea] rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="md:col-span-2 bg-[#cfe7ea] rounded-2xl p-5 sm:p-6 flex flex-col lg:flex-row items-center justify-between gap-6">
 
         {/* TEXT */}
-        <div className="max-w-sm">
-          <h3 className="text-xl font-bold text-gray-900 mb-3">
-            Get your ride right <br /> with SwiftMove Reserve
+        <div className="w-full max-w-md text-center lg:text-left">
+          
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">
+            Get your ride right <br className="hidden sm:block" />
+            with SwiftMove Reserve
           </h3>
 
           <p className="text-sm text-gray-700 mb-4">
@@ -412,38 +423,41 @@ const toggleFAQ = (index) => {
           </p>
 
           {/* DATE + TIME */}
-          <div className="flex gap-3 mb-4">
+          <div className="flex flex-col sm:flex-row gap-3 mb-4">
             <input
               type="date"
-              className="px-3 py-2 rounded-lg border border-gray-300 text-sm"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm"
             />
             <input
               type="time"
-              className="px-3 py-2 rounded-lg border border-gray-300 text-sm"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm"
             />
           </div>
-<Link to="/book"> 
- <button className="bg-black text-white px-6 py-2 rounded-lg text-sm hover:bg-gray-900">
-            Next
-          </button></Link>
-         
+
+          <Link to="/book">
+            <button className="w-full sm:w-auto bg-black text-white px-6 py-2 rounded-lg text-sm hover:bg-gray-900 transition">
+              Next
+            </button>
+          </Link>
         </div>
 
         {/* IMAGE */}
         <img
           src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400"
           alt="watch"
-          className="w-46 object-contain"
+          className="w-40 sm:w-48 md:w-52 lg:w-56 object-contain"
         />
+
       </div>
 
       {/* RIGHT BENEFITS */}
-      <div className="bg-gray-50 rounded-2xl p-6">
+      <div className="bg-gray-50 rounded-2xl p-5 sm:p-6">
+        
         <h4 className="font-semibold text-gray-900 mb-4">
           Benefits
         </h4>
 
-        <ul className="space-y-4 text-sm text-gray-600">
+        <ul className="space-y-3 sm:space-y-4 text-sm text-gray-600">
           <li>📅 Choose your exact pickup time up to 90 days in advance.</li>
           <li>⏱ Extra wait time included to meet your ride.</li>
           <li>❌ Cancel at no charge up to 60 minutes in advance.</li>
@@ -452,6 +466,7 @@ const toggleFAQ = (index) => {
         <p className="text-xs text-gray-400 mt-4 cursor-pointer hover:underline">
           See terms
         </p>
+
       </div>
 
     </div>
@@ -459,28 +474,50 @@ const toggleFAQ = (index) => {
 </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-5">
-          <div className="mb-14">
-            <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase mb-3">Simple Process</p>
-            <h2 className="text-4xl font-bold text-gray-900 tracking-tight">How it works</h2>
+      <section className="py-16 sm:py-20 lg:py-24 bg-gray-50">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+    {/* Header */}
+    <div className=" mb-12 lg:mb-16">
+      <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase mb-3">
+        Simple Process
+      </p>
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+        How it works
+      </h2>
+    </div>
+
+    {/* Steps */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+
+      {STEPS.map((step, i) => (
+        <div
+          key={step.num}
+          className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition duration-300"
+        >
+
+          {/* Step Number */}
+          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-black text-white font-bold text-lg mb-4 group-hover:scale-110 transition">
+            {step.num}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {STEPS.map((step, i) => (
-              <div key={step.num} className="relative animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>
-                {i < STEPS.length - 1 && (
-                  <div className="hidden md:block absolute top-7 left-[calc(100%-1rem)] w-full h-px bg-gray-200 z-0" />
-                )}
-                <div className="relative z-10">
-                  <div className="text-5xl font-black text-gray-100 mb-3 leading-none">{step.num}</div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{step.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+
+          {/* Title */}
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            {step.title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-sm text-gray-500 leading-relaxed">
+            {step.desc}
+          </p>
+
         </div>
-      </section>
+      ))}
+
+    </div>
+
+  </div>
+</section>
 
       {/* ── FEATURES ── */}
       <section className="py-24 bg-white">
@@ -506,7 +543,7 @@ const toggleFAQ = (index) => {
           </div>
         </div>
       </section>
-
+{/* faq section */}
       <section className="py-24 bg-gray-50">
   <div className="max-w-7xl mx-auto px-10">
 
